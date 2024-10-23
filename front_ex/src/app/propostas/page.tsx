@@ -79,11 +79,12 @@
 //     </section>
 //   )
 // }
-
+"use client"
 import './page.css'
 import { useEffect, useState } from "react";
 import { useClienteStore } from "@/context/cliente";
 import { OrdemDeCompraI } from "@/utils/types/OrdemDeCompra";
+import { Ferramenta } from '@/utils/types/ferramentas';
 
 export default function OrdemsDeCompra() {
   const [ordemsDeCompra, setOrdemsDeCompra] = useState<OrdemDeCompraI[]>([])
@@ -110,10 +111,10 @@ export default function OrdemsDeCompra() {
   const ordemsDeCompraTable = ordemsDeCompra.map(ordem => (
     <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
       <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-        {ordem.ferramenta.modelo}
+        {ordem.Ferramenta.modelo}
       </th>
       <td className="px-6 py-4">
-        <img src={ordem.ferramenta.foto} className="fotoFerramenta" alt="Foto Ferramenta" />
+        <img src={ordem.Ferramenta.foto} className="fotoFerramenta" alt="Foto Ferramenta" />
       </td>
       <td className="px-6 py-4">
         <p><b>{ordem.descricao}</b></p>

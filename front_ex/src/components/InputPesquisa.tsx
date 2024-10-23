@@ -52,13 +52,13 @@ export function InputPesquisa({ setFerramentas }: InputPesquisaProps) {
             placeholder="Qual veículo você procura? (modelo, marca, ano ou preço máximo)"
             required
             {...register("termo")} />
-          <button type="submit" className="text-black absolute end-2.5 bottom-2.5 bg-yellow-300 hover:bg-yellow-300 focus:shadow-md focus:shadow-yellow-500 font-medium rounded-lg text-sm px-4 py-2 ">
+          <button type="submit" className="text-white absolute end-2.5 bottom-2.5 bg-orange-500 hover:bg-orange-500 focus:shadow-md focus:shadow-orange-500 font-medium rounded-lg text-sm px-4 py-2 ">
             Buscar
           </button>
         </div>
       </form>
 
-      <button type="button" className="ms-3 mt-2 focus:outline-none text-black bg-yellow-300 hover:bg-yellow-300 focus:shadow-md focus:shadow-yellow-500 font-medium rounded-xl text-sm px-5 py-2.5 mb-2 "
+      <button type="button" className="ms-3 mt-2 focus:outline-none text-white bg-orange-500 hover:bg-orange-500 focus:shadow-md focus:shadow-orange-500 font-medium rounded-xl text-sm px-5 py-2.5 mb-2 "
         onClick={mostraDestaques}>
         Veículos em Destaque
       </button>
