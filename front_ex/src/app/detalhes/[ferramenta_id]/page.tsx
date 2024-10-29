@@ -130,6 +130,7 @@ import { toast } from 'sonner'
 import { Comentario } from "@/utils/types/comentarios";
 
 import Comentarios from "./comentarios";
+import { space } from "postcss/lib/list";
 
 
 type Inputs = {
@@ -144,8 +145,8 @@ export default function Detalhes() {
   const [fotos, setFotos] = useState<FotoI[]>([])
   //const [avaliacao, setAvaliacao] = useState<Avaliacao[]>([])
   const [avaliacao, setAvaliacao] = useState<Comentario[]>([])
-  const [resultado, setResultado] = useState<Comentario[]>([]);
- 
+
+
 
   //const { register, handleSubmit, reset } = useForm<Inputs>()
 
@@ -172,14 +173,11 @@ export default function Detalhes() {
       const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/avaliacao/${params.ferramenta_id}`) // Alterado para ferramentas
       const dados = await response.json()
 
-      setAvaliacao(avaliacao)
+      setAvaliacao(dados)
 
-      setResultado(resultado);
-  
-       
     }
     buscaAvaliacao()
-    console.log(avaliacao);
+    console.log(`avaliação ${avaliacao}`);
   }, [params.ferramenta_id])
 
 
@@ -192,38 +190,53 @@ export default function Detalhes() {
     </div>
   ));
   const listaAvaliacao = avaliacao.map((avaliacao) => (
-    <div key={avaliacao.id}>
-      <p>{avaliacao.comentario}</p> {/* Alterado */}
-      <p>{avaliacao.estrelas} estrelas</p> {/* Alterado */}
+    <div key={avaliacao.id} >
+
+      <div className="p-5 mt-6 mx-auto border border-gray-200 rounded-lg shadow md:flex-row md:max-w-5xl">
+       
+        <div className="flow-root">
+          <ul role="list" className="divide-y divide-gray-200 ">
+            <li className="py-3 sm:py-4">
+              <div className="flex items-center mt-1 mb-5">
+                <div className="flex-shrink-0">
+                  <img className="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-1.jpg" alt="Neil image" />
+                </div>
+                <div className="flex-1 min-w-0 ms-4">
+                  <p className="text-sm font-medium text-gray-900 truncate ">
+                    {avaliacao.cliente.nome}
+                  </p>
+                  <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+                  {avaliacao.cliente.email}
+                  </p>
+                </div>
+                <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                  <p>{[...Array(avaliacao.estrelas)].map((_, index) => (
+                    <span key={index}>⭐</span>
+                  ))}
+                  </p>
+                </div>
+              </div>
+              <p className="font-bold ml-9 mr-9">{avaliacao.comentario}</p>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+
+
+
     </div>
   ));
-  const listaEstrelas = (
-    <div className="flex items-center space-x-1 rtl:space-x-reverse">
-  {[...Array(Math.floor(resultado.mediaEstrelas))].map((_, index) => (
-    <svg key={index} className="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="(link unavailable)" fill="currentColor" viewBox="0 0 22 20">
-      <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-    </svg>
-  ))}
-  {resultado.mediaEstrelas % 1 !== 0 && (
-    <svg className="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="(link unavailable)" fill="currentColor" viewBox="0 0 22 20">
-      <path d="M15.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-2.515-.367a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-2.515.367A1.535 1.535 0 0 0 1.463 9.2l1.828 1.828.863-5.031a1.532 1.532 0 0 0 2.226 1.616L5 12.258l2.258 1.172a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L8.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-    </svg>
-  )}
-  {[...Array(5 - Math.ceil(resultado.mediaEstrelas))].map((_, index) => (
-    <svg key={index} className="w-4 h-4 text-gray-300" aria-hidden="true" xmlns="(link unavailable)" fill="currentColor" viewBox="0 0 22 20">
-      <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-    </svg>
-  ))}
-</div>
-)
-  
+
+
 
 
 
   return (
     <>
       <section >
-        <div className=" mt-6 mx-auto border border-gray-200 rounded-lg shadow md:flex-row md:max-w-5xl ">
+        <div className=" 
+        mt-6 mx-auto border border-gray-200 rounded-lg shadow md:flex-row md:max-w-5xl ">
           <img
             className="object-cover w-full rounded-t-lg h-96 md:h-2/4 md:w-2/4 md:rounded-none md:rounded-s-lg"
             src={ferramenta?.foto}
@@ -241,10 +254,13 @@ export default function Detalhes() {
             </div>
             <div className="flex items-center mt-2.5 mb-5">
               <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                {listaEstrelas}
+                Aqui fica estrelas : ⭐
 
               </div>
-              <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ms-3"></span>
+              <span
+                className="bg-blue-100 text-blue-800 text-xs 
+              font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200
+               dark:text-blue-800 ms-3">+ mais nota "5.0"</span>
             </div>
             <h5 className="mb-2 text-3xl font-semibold tracking-tight text-gray-900 ">
               Preço R$: {Number(ferramenta?.preco).toLocaleString("pt-br", { minimumFractionDigits: 2 })}
@@ -271,7 +287,13 @@ export default function Detalhes() {
       <div className="mt-4 md:max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-4">
         {listaFotos}
       </div>
-      <div className="mt-4 md:max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="flex flex-col md:max-w-5xl mx-auto mt-4">
+      <div className="mb-10">
+          <h5
+            className="text-xl font-bold 
+             text-gray-900 ">Comentários</h5>
+
+        </div>
         {listaAvaliacao}
       </div>
 

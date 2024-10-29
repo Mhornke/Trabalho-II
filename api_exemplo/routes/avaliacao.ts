@@ -117,27 +117,38 @@ router.get("/:ferramentaId", async (req, res) => {
   const { ferramentaId } = req.params
 
   try {
-    const avaliacoes = await prisma.avaliacao.aggregate({
-      where: { ferramentaId: Number(ferramentaId) 
+    const avaliacoes = await prisma.avaliacao.findMany({
+      where: {
+        ferramentaId: Number(ferramentaId)
+      },
+      include: {
+        cliente: {
+          select: {
+            nome: true,
+            email: true,
 
-      },
-      _count: {
-        id: true
-      },
-      _sum: {
-        estrelas: true
-      },
-      _avg: {
-        estrelas: true
+          }
+        }
       }
     })
-    const resultado = {
-      totalAvaliacoes: avaliacoes._count.id,
-      totalEstrelas: avaliacoes._sum.estrelas,
-      mediaEstrelas: avaliacoes._avg.estrelas 
-    }
 
-    res.status(200).json({avaliacoes, resultado})
+    // const avaliacoes = await prisma.avaliacao.aggregate({
+    //   where: { ferramentaId: Number(ferramentaId) 
+
+    //   },
+    //   _count: {
+    //     id: true
+    //   },
+    //   _sum: {
+    //     estrelas: true
+    //   },
+    //   _avg: {
+    //     estrelas: true
+    //   }
+    // })
+
+
+    res.status(200).json(avaliacoes)
   } catch (error) {
     res.status(400).json(error)
   }
@@ -176,10 +187,10 @@ router.post("/", async (req, res) => {
         },
         estrelas,
         comentario,
-        totalAvaliacao : estrelas
+        totalAvaliacao: estrelas
       }
     });
-    
+
     res.status(201).json(avaliacao);
   } catch (error) {
     res.status(400).json(error);
