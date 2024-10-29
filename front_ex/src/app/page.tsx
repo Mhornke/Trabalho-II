@@ -100,7 +100,7 @@ export default function Home() {
       <InputPesquisa setFerramentas={setFerramentas} /> {/* Alterado para ferramentas */}
 
       <section className="max-w-screen-xl mx-auto">
-        <h1 className="mb-5 mt-2 text-3xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white">Ferramentas <span className="underline underline-offset-3 decoration-8 decoration-orange-400 dark:decoration-orange-600">em destaque</span></h1> {/* Alterado para Ferramentas */}
+        <h1 className="mb-5 mt-2 text-3xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl ">Ferramentas <span className="underline underline-offset-3 decoration-8 decoration-orange-400 dark:decoration-orange-600">em destaque</span></h1> {/* Alterado para Ferramentas */}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
           {listaFerramentas} {/* Alterado para ferramentas */}

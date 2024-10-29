@@ -20,7 +20,7 @@ export function Header() {
     <nav className="bg-slate-50 border-gray-200 mb-15">
       <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
         <Link href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-          <img src="./logo.png" className="h-16" alt="Fusca" />
+          <img src="./logo.png" className="h-16" alt="logo" />
           <span className="self-center text-3xl font-semibold whitespace-nowrap ">
             E-Ferramenentas
           </span>
@@ -31,17 +31,17 @@ export function Header() {
               <span className="text-black">
                 {cliente.nome}
               </span>
-              <Link href="/propostas" className="font-bold text-blue-600 dark:text-blue-500 hover:underline">
-                Minhas Propostas
+              <Link href="/propostas" className="font-bold text-blue-600  hover:underline">
+                Minhas Propostasdar
               </Link>
-              <span className="cursor-pointer font-bold text-blue-600 dark:text-blue-500 hover:underline"
+              <span className="cursor-pointer font-bold text-blue-600 hover:underline"
                 onClick={sairCliente}>
                 Sair
               </span>
             </>
             :
             <>
-              <Link href="/login" className="font-bold text-blue-600 dark:text-blue-500 hover:underline">
+              <Link href="/login" className="font-bold text-blue-600  hover:underline">
                 Entrar
               </Link>
             </>

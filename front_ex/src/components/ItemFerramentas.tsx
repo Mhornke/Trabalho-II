@@ -7,7 +7,7 @@ export function ItemFerramentas({ ferramenta }: { ferramenta: Ferramenta }) {
   
   return (
     <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow 
-    dark:bg-gray-800 dark:border-gray-700">
+    ">
 
       <Link href={`/detalhes/${ferramenta.id}`}>
         <img className="rounded-t-lg w-full"
@@ -17,10 +17,10 @@ export function ItemFerramentas({ ferramenta }: { ferramenta: Ferramenta }) {
 
       <div className="p-5">
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900
-         dark:text-white">
+         ">
           {ferramenta.fabricante.nome} {ferramenta.modelo}
         </h5>
-        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+        <p className="mb-3 font-normal text-gray-700 ">
           Ano: {ferramenta.ano} - {ferramenta.quantidadeEmEstoque} Estoque
         </p>
         <p className="mb-3 font-bold text-white">
@@ -28,7 +28,7 @@ export function ItemFerramentas({ ferramenta }: { ferramenta: Ferramenta }) {
             { minimumFractionDigits: 2 }
           )}
         </p>
-        <p className="mb-3 text-sm text-gray-700 dark:text-gray-400 truncate">
+        <p className="mb-3 text-sm text-gray-700 truncate">
           {ferramenta.acessorios}
         </p>
         <Link href={`/detalhes/${ferramenta.id}`} 

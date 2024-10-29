@@ -5,7 +5,8 @@ import fabricantesRoutes from './routes/fabricante'
 import ferramentasRoutes from './routes/ferramentas'
 import fotosRoutes from './routes/fotos'
 import clientesRoutes from './routes/clientes'
-import OrdemDeComprasRoutes from './routes/OrdemDeCompra'
+import avaliacaoRoutes from './routes/avaliacao'
+import recuperaSenhaRoutes from './routes/recupera'
 
 const app = express()
 const port = 3004
@@ -18,7 +19,9 @@ app.use("/fabricante", fabricantesRoutes)
 app.use("/ferramentas", ferramentasRoutes)
 app.use("/fotos", fotosRoutes)
 app.use("/clientes", clientesRoutes)
-app.use("/OrdemDeCompra", OrdemDeComprasRoutes)
+app.use("/avaliacao", avaliacaoRoutes)
+app.use("/recupera", recuperaSenhaRoutes)
+
 
 
 app.get('/', (req, res) => {

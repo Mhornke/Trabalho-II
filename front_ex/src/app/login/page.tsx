@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form"
 import { useRouter } from "next/navigation"
 import { useClienteStore } from "@/context/cliente"
 import Link from "next/link"
-
+import { useState } from "react"
 type Inputs = {
   email: string
   senha: string
@@ -13,7 +13,14 @@ type Inputs = {
 export default function Login() {
   const { register, handleSubmit } = useForm<Inputs>()
   const { logaCliente } = useClienteStore()
+
+  const [mostrarSenha, setMostrarSenha] = useState(false)
+  const [alteraOlho, setAlteraOlho] = useState("olho.png")
   const router = useRouter()
+  const alteraVisivilidade = () => {
+    setMostrarSenha(!mostrarSenha)
+    setAlteraOlho(alteraOlho === "olho.png"? "olhoAberto.png" : "olho.png")
+}  
 
   async function verificaLogin(data: Inputs) {
     // console.log(data)
@@ -67,9 +74,16 @@ export default function Login() {
               </div>
               <div>
                 <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Senha de Acesso:</label>
-                <input type="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " 
+                <div className="flex relative justify-end ">
+                                    <img src={alteraOlho} alt="olho_senha"  
+                                    className=" w-8 absolute mr-2 mt-2  focus:ring-4 focus:outline-none focus:ring-primary-300 "
+                                    onClick={alteraVisivilidade}
+                                    />
+                <input type={mostrarSenha ? "text" : "password"}
+                 id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " 
                 required 
                 {...register("senha")} />
+                </div>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-start">
