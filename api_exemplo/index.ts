@@ -7,6 +7,7 @@ import fotosRoutes from './routes/fotos'
 import clientesRoutes from './routes/clientes'
 import avaliacaoRoutes from './routes/avaliacao'
 import recuperaSenhaRoutes from './routes/recupera'
+import favoritoRoutes from './routes/favoritos'
 
 const app = express()
 const port = 3004
@@ -20,6 +21,7 @@ app.use("/ferramentas", ferramentasRoutes)
 app.use("/fotos", fotosRoutes)
 app.use("/clientes", clientesRoutes)
 app.use("/avaliacao", avaliacaoRoutes)
+app.use("/favoritos", favoritoRoutes)
 app.use("/recupera", recuperaSenhaRoutes)
 
 

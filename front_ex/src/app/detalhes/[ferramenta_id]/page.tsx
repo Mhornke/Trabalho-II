@@ -128,9 +128,8 @@ import { useForm } from "react-hook-form"
 import { toast } from 'sonner'
 
 import { Comentario } from "@/utils/types/comentarios";
-
 import Comentarios from "./comentarios";
-import { space } from "postcss/lib/list";
+import { Estatisticas } from "@/utils/types/estatisticas";
 
 
 type Inputs = {
@@ -145,6 +144,7 @@ export default function Detalhes() {
   const [fotos, setFotos] = useState<FotoI[]>([])
   //const [avaliacao, setAvaliacao] = useState<Avaliacao[]>([])
   const [avaliacao, setAvaliacao] = useState<Comentario[]>([])
+  const [estatisticas, setEstatisticas] = useState<Estatisticas>({});
 
 
 
@@ -171,9 +171,10 @@ export default function Detalhes() {
 
     async function buscaAvaliacao() {
       const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/avaliacao/${params.ferramenta_id}`) // Alterado para ferramentas
-      const dados = await response.json()
+      const { avaliacoes, estatisticas } = await response.json()
 
-      setAvaliacao(dados)
+      setAvaliacao(avaliacoes)
+      setEstatisticas(estatisticas)
 
     }
     buscaAvaliacao()
@@ -193,20 +194,20 @@ export default function Detalhes() {
     <div key={avaliacao.id} >
 
       <div className="p-5 mt-6 mx-auto border border-gray-200 rounded-lg shadow md:flex-row md:max-w-5xl">
-       
+
         <div className="flow-root">
           <ul role="list" className="divide-y divide-gray-200 ">
             <li className="py-3 sm:py-4">
               <div className="flex items-center mt-1 mb-5">
                 <div className="flex-shrink-0">
-                  <img className="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-1.jpg" alt="Neil image" />
+                  <img className="w-8 h-8 rounded-full" src="/avatar-do-usuario.png" alt="Neil image" />
                 </div>
                 <div className="flex-1 min-w-0 ms-4">
                   <p className="text-sm font-medium text-gray-900 truncate ">
                     {avaliacao.cliente.nome}
                   </p>
                   <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                  {avaliacao.cliente.email}
+                    {avaliacao.cliente.email}
                   </p>
                 </div>
                 <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
@@ -216,7 +217,7 @@ export default function Detalhes() {
                   </p>
                 </div>
               </div>
-              <p className="font-bold ml-9 mr-9">{avaliacao.comentario}</p>
+              <p className="font-medium ml-16 mr-16">{avaliacao.comentario}</p>
             </li>
 
           </ul>
@@ -254,13 +255,25 @@ export default function Detalhes() {
             </div>
             <div className="flex items-center mt-2.5 mb-5">
               <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                Aqui fica estrelas : ⭐
+
+                {estatisticas._avg && estatisticas._avg.estrelas ? (
+                  [...Array(Math.round(estatisticas._avg.estrelas))].map((_, index) => (
+                    <span key={index}>⭐</span>
+                  ))
+                ) : (
+                  <span>Sem avaliação</span> // Ou qualquer outra mensagem padrão
+                )}
 
               </div>
               <span
                 className="bg-blue-100 text-blue-800 text-xs 
               font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200
-               dark:text-blue-800 ms-3">+ mais nota "5.0"</span>
+               dark:text-blue-800 ms-3">
+                {estatisticas && estatisticas._avg ? Math.round(estatisticas._avg.estrelas) : 0}
+              </span>
+              <p className="text-sm text-gray-500 truncate dark:text-gray-400 ml-3">
+                    {estatisticas && estatisticas._count ? estatisticas._count.id : 0} avaliações
+                  </p>
             </div>
             <h5 className="mb-2 text-3xl font-semibold tracking-tight text-gray-900 ">
               Preço R$: {Number(ferramenta?.preco).toLocaleString("pt-br", { minimumFractionDigits: 2 })}
@@ -268,33 +281,40 @@ export default function Detalhes() {
             <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
               {ferramenta?.acessorios}
             </p>
+            <button type="submit" className="w-full text-white bg-orange-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                Comprar</button>
           </div>
           <div>
-            {cliente.id ? (
-              <Comentarios />
 
-            ) : (
-
-              <h3 className="text-xl font-bold tracking-tight text-orange-700 ">
-                ** Faça login para deixar um comentario</h3>
-            )
-            }
 
           </div>
         </div>
       </section>
 
+
+
       <div className="mt-4 md:max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-4">
         {listaFotos}
       </div>
-      <div className="flex flex-col md:max-w-5xl mx-auto mt-4">
-      <div className="mb-10">
+      <div className="flex flex-col md:max-w-5xl mx-auto mt-4 ">
+        {cliente.id ? (
+          <Comentarios />
+
+        ) : (
+
+          <a href="/login" className="text-xl font-bold tracking-tight text-orange-700 ml-2 mr-2">
+            ** Faça login para deixar um comentario</a>
+        )
+        }
+        <div className=" border p-3 mt-10 w-full">
+        <div className="mb-1 ">
           <h5
             className="text-xl font-bold 
              text-gray-900 ">Comentários</h5>
 
         </div>
         {listaAvaliacao}
+        </div>
       </div>
 
     </>

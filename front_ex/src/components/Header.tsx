@@ -31,8 +31,9 @@ export function Header() {
               <span className="text-black">
                 {cliente.nome}
               </span>
-              <Link href="/propostas" className="font-bold text-blue-600  hover:underline">
-                Minhas Propostasdar
+              <Link href="/favoritos" className="font-bold flex text-orange-600  hover:underline">
+                Favoritos 
+                <img src="/gostar.png" alt="favoritos" className="w-6 h-6 ml-1" />
               </Link>
               <span className="cursor-pointer font-bold text-blue-600 hover:underline"
                 onClick={sairCliente}>

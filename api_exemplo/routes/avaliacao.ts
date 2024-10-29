@@ -129,26 +129,19 @@ router.get("/:ferramentaId", async (req, res) => {
 
           }
         }
+          
+          
       }
     })
-
-    // const avaliacoes = await prisma.avaliacao.aggregate({
-    //   where: { ferramentaId: Number(ferramentaId) 
-
-    //   },
-    //   _count: {
-    //     id: true
-    //   },
-    //   _sum: {
-    //     estrelas: true
-    //   },
-    //   _avg: {
-    //     estrelas: true
-    //   }
-    // })
+    const estatisticas = await prisma.avaliacao.aggregate({
+      where: { ferramentaId: Number(ferramentaId) },
+      _count: { id: true },
+      _sum: { estrelas: true },
+      _avg: { estrelas: true },
+    });
 
 
-    res.status(200).json(avaliacoes)
+    res.status(200).json({avaliacoes, estatisticas})
   } catch (error) {
     res.status(400).json(error)
   }
@@ -186,7 +179,7 @@ router.post("/", async (req, res) => {
           connect: { id: ferramentaId }
         },
         estrelas,
-        comentario,
+        comentario: comentario,
         totalAvaliacao: estrelas
       }
     });

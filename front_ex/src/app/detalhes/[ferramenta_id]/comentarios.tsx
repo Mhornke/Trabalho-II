@@ -8,7 +8,8 @@ import { useForm } from "react-hook-form"
 import { toast } from 'sonner'
 
 type Inputs = {
-  descricao: string
+  estrelas: number
+  comentario: string
 }
 //const params = useParams()
 
@@ -19,9 +20,35 @@ export default function Comentarios() {
   const { cliente } = useClienteStore()
 
   const [ferramenta, setFerramenta] = useState<Ferramenta>()
-  //const [avaliacao, setAvaliacao] = useState<Comentario[]>([])
-
   const { register, handleSubmit, reset } = useForm<Inputs>()
+  const [caixaDeComentarios, setcaxaDeComentarios] = useState(false)
+
+  const [avaliacao, setAvaliacao] = useState(0)
+  const [estrela, setEstrela] = useState(Array(5).fill(false))
+  
+  const mouseEstrelaCheia = (index: number) => { 
+    const novaEstrela = Array(5).fill(false)
+    for (let i = 0; i <= index; i++) {
+      novaEstrela[i] = true
+    }
+    setEstrela(novaEstrela)
+  }
+  const mouseEstrelaVazia = () => {
+    const novaEstrela = Array(5).fill(false)
+    for (let i =0; i< avaliacao; i++){
+      novaEstrela[i] = true
+    }
+    setEstrela(novaEstrela)
+  }
+  const selecionarEstrela = (index: number) => {
+    setAvaliacao(index + 1)
+    const novaEstrela = Array(5).fill(false)
+    for (let i = 0; i <= index; i++) {
+      novaEstrela[i] = true
+    }
+    setEstrela(novaEstrela)
+    
+  }
 
   useEffect(() => {
     async function buscaDados() {
@@ -40,6 +67,13 @@ export default function Comentarios() {
 
 
   async function enviaAvaliacao(data: Inputs) {
+    console.log({
+            clienteId: cliente.id,
+      ferramentaId: Number(params.ferramenta_id),
+      estrelas: data.estrelas,
+      comentario: data.comentario,  // Alterado para 'comentario'
+    });
+    
     const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/avaliacao`, {
       headers: {
         "Content-Type": "application/json"
@@ -48,28 +82,56 @@ export default function Comentarios() {
       body: JSON.stringify({
         clienteId: cliente.id,
         ferramentaId: Number(params.ferramenta_id),
-      })
+        estrelas: avaliacao, // Enviando o valor correto de estrelas
+        comentario: data.comentario, 
     })
+    })
+    console.log("Status da resposta:", response.status);
+    const responseData = await response.json();
+    console.log("Dados da resposta:", responseData);
 
     if (response.status === 201) {
-      toast.success("Obrigado. Sua proposta foi enviada. Aguarde retorno")
+      toast.success("Sua Avaliação foi enviada! Agradecemos por avaliar nossos produtos. ")
+      setcaxaDeComentarios(true)
       reset()
     } else {
-      toast.error("Erro... Não foi possível enviar sua proposta")
+      toast.error("Erro... Não foi possível enviar sua Avaliação")
     }
   }
 
   return (
     <>
+    <div className="mr-4 ml-4">
+    {caixaDeComentarios ? (
+      <div className="border w-full h-[10rem] flex justify-center place-items-center bg-green-200 ">
+          <img src="/marca-de-verificacao.png" alt="checkbox" className="w-10" />
+          <h3 className="  text-xl font-bold tracking-tight text-gray-900">
+            Obrigado pela sua avaliação!
+          </h3>
+          </div>
+    ):(
+      <>
       <h3 className="text-xl font-bold tracking-tight text-gray-900">
         Deixe seu comentario!
       </h3> {/* Alterado */}
       <form onSubmit={handleSubmit(enviaAvaliacao)}>
-        <input type="checkbox" name="estrela1" id="estrelaAvaliacao1" />
-        <input type="checkbox" name="estrela2" id="estrelaAvaliacao2" />
-        <input type="checkbox" name="estrela3" id="estrelaAvaliacao3" />
-        <input type="checkbox" name="estrela4" id="estrelaAvaliacao4" />
-        <input type="checkbox" name="estrela5" id="estrelaAvaliacao5" />
+        <div className="flex mt-2">
+          {estrela.map((estrelaCheia, index) => (
+
+        <img 
+        key={index}
+        src={estrelaCheia ? "/estrelaCheia.png" : "/estrelaVazia.png"} 
+        alt="estrela" className="w-5"
+        onMouseEnter={() => mouseEstrelaCheia(index)}
+        onMouseLeave={() => mouseEstrelaVazia()}
+        onClick={()=> selecionarEstrela(index)} />
+        
+          ))}
+        
+        </div>
+        <label htmlFor="number">Você avaliou: {avaliacao} estrela(s)</label>
+        <input type="hidden" value={avaliacao} {...register("estrelas")} /> {/* Registra o valor da avaliação */}
+         {/* <p className="mt-2">Você avaliou: {avaliacao} estrela(s)</p> */}
         <h3 className="mb-2 mt-4 bg-gray-100 border  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed " value={`${cliente.nome} (${cliente.email})`} disabled readOnly >{cliente.nome}</h3>
         <textarea
           id="message"
@@ -78,7 +140,7 @@ export default function Comentarios() {
                  focus:border-blue-500 "
           placeholder="Descreva seu comentario"
           required
-          {...register("descricao")}>
+          {...register("comentario")}>
 
         </textarea>
         <button type="submit"
@@ -90,7 +152,10 @@ export default function Comentarios() {
           Enviar Avaliação
         </button>
       </form>
-
+      </>
+      )}
+      </div>
+        
     </>
   )
 

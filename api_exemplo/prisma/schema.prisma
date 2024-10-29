@@ -22,22 +22,23 @@ model Fabricante {
 }
 
 model Ferramenta {
-  id                  Int             @id @default(autoincrement())
-  modelo              String          @db.VarChar(60)
-  ano                 Int             @db.SmallInt
-  preco               Decimal         @db.Decimal(10, 2)
-  quantidadeEmEstoque Int             @db.MediumInt
-  destaque            Boolean         @default(true)
+  id                  Int         @id @default(autoincrement())
+  modelo              String      @db.VarChar(60)
+  ano                 Int         @db.SmallInt
+  preco               Decimal     @db.Decimal(10, 2)
+  quantidadeEmEstoque Int         @db.MediumInt
+  destaque            Boolean     @default(true)
   foto                String
   acessorios          String? // Pode ser uma string com uma descrição dos acessórios disponíveis
-  createdAt           DateTime        @default(now())
-  updatedAt           DateTime        @updatedAt
-  tipo                StatusOrdem     @default(APROVADA)
-  fabricante          Fabricante      @relation(fields: [fabricanteId], references: [id])
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+  tipo                StatusOrdem @default(APROVADA)
+  fabricante          Fabricante  @relation(fields: [fabricanteId], references: [id])
   fabricanteId        Int
   fotos               Foto[]
   // ordens              OrdemDeCompra[]
   Avaliacao           Avaliacao[]
+  Favorito            Favorito[]
 
   @@map("ferramentas")
 }
@@ -53,6 +54,16 @@ model Avaliacao {
   clienteId      String     @db.VarChar(36)
 }
 
+model Favorito {
+  id           Int        @id @default(autoincrement())
+  cliente      Cliente    @relation(fields: [clienteId], references: [id])
+  clienteId    String     @db.VarChar(36)
+  ferramenta   Ferramenta @relation(fields: [ferramentaId], references: [id])
+  ferramentaId Int
+
+  @@map("favoritos")
+}
+
 model Foto {
   id           Int        @id @default(autoincrement())
   descricao    String     @db.VarChar(30)
@@ -64,15 +75,16 @@ model Foto {
 }
 
 model Cliente {
-  id        String          @id @default(uuid()) @db.VarChar(36)
-  nome      String          @db.VarChar(60)
-  email     String          @unique @db.VarChar(60)
-  senha     String          @db.VarChar(60)
+  id        String      @id @default(uuid()) @db.VarChar(36)
+  nome      String      @db.VarChar(60)
+  email     String      @unique @db.VarChar(60)
+  senha     String      @db.VarChar(60)
   novaSenha String?
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
   // ordens    OrdemDeCompra[]
   Avaliacao Avaliacao[]
+  Favorito  Favorito[]
 
   @@map("clientes")
 }
