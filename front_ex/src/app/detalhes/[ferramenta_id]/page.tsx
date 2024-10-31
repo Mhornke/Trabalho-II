@@ -132,27 +132,38 @@ import Comentarios from "./comentarios";
 import { Estatisticas } from "@/utils/types/estatisticas";
 
 
-type Inputs = {
-  descricao: string
-}
-
 export default function Detalhes() {
   const params = useParams()
   const { cliente } = useClienteStore()
+  const { logaCliente } = useClienteStore()
 
   const [ferramenta, setFerramenta] = useState<Ferramenta>() // Alterado para ferramenta
   const [fotos, setFotos] = useState<FotoI[]>([])
   //const [avaliacao, setAvaliacao] = useState<Avaliacao[]>([])
   const [avaliacao, setAvaliacao] = useState<Comentario[]>([])
   const [estatisticas, setEstatisticas] = useState<Estatisticas>({});
+  
+  const [ favoritoAdd, setFavoritoAdd] = useState("/gosteiVazio.png")
+  const [jaFavorito, setjaFavorito] = useState(false);
 
-
-
+  
   //const { register, handleSubmit, reset } = useForm<Inputs>()
 
   useEffect(() => {
+    async function buscaCliente(idCliente: string) {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/clientes/${idCliente}`)
+      if (response.status == 200) {
+        const dados = await response.json()
+        logaCliente(dados)
+      }
+    }
+
+    if (localStorage.getItem("client_key")) {
+      const idClienteLocal = localStorage.getItem("client_key") as string
+      buscaCliente(idClienteLocal)
+    }
     async function buscaDados() {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/ferramentas/${params.ferramenta_id}`) // Alterado para ferramentas
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/ferramentas/${params.ferramenta_id}`) 
       const dados = await response.json()
       setFerramenta(dados)
     }
@@ -161,7 +172,7 @@ export default function Detalhes() {
 
 
     async function buscaFotos() {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/fotos/${params.ferramenta_id}`) // Alterado para ferramentas
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/fotos/${params.ferramenta_id}`) 
       const dados = await response.json()
 
       setFotos(dados)
@@ -170,7 +181,7 @@ export default function Detalhes() {
     console.log(fotos);
 
     async function buscaAvaliacao() {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/avaliacao/${params.ferramenta_id}`) // Alterado para ferramentas
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/avaliacao/${params.ferramenta_id}`) 
       const { avaliacoes, estatisticas } = await response.json()
 
       setAvaliacao(avaliacoes)
@@ -178,9 +189,45 @@ export default function Detalhes() {
 
     }
     buscaAvaliacao()
-    console.log(`avaliação ${avaliacao}`);
-  }, [params.ferramenta_id])
 
+    // async function verificaFavorito(idCliente: string) {
+    //   const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/favoritos/${idCliente}/${params.ferramenta_id}`);
+    //   if (response.status === 200) {
+        
+    //     setjaFavorito(true);
+    //   }
+    //   else (cliente.id) {
+    //     verificaFavorito(false);
+    // }
+    // }
+  }, [cliente.id, params.ferramenta_id]);
+  
+  async function salvaFavorito() {
+  
+    setFavoritoAdd(favoritoAdd === "/gosteiVazio.png" ? "/gostarCheio.png" : "/gostarCheio.png")
+      
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/favoritos`, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      method: "POST",
+      body: JSON.stringify({
+        clienteId: cliente.id,
+        ferramentaId: Number(params.ferramenta_id),
+        
+      })
+    })
+    
+
+      if (response.status === 201) {
+      toast.success(`Adicionado aos favoritos`);
+      setjaFavorito(true);
+      setFavoritoAdd("/gostarCheck.png");
+    } 
+   else {
+    toast("Essa ferramenta já está nos seus favoritos!");
+  }
+}
 
   const listaFotos = fotos.map((foto) => (
     <div key={foto.id}>
@@ -238,11 +285,22 @@ export default function Detalhes() {
       <section >
         <div className=" 
         mt-6 mx-auto border border-gray-200 rounded-lg shadow md:flex-row md:max-w-5xl ">
+         <div>
+          <div className="absolute w-10 p-1 ml-4 mt-4 hover:w-11 
+          focus:ring-4 focus:outline-none focus:ring-primary-300
+          bg-opacity-50 bg-orange-300  rounded-full">
+
+          <img src={favoritoAdd} alt="favoritar" 
+           onClick={salvaFavorito}
+           className="w-10"/>
+
+          </div>
           <img
             className="object-cover w-full rounded-t-lg h-96 md:h-2/4 md:w-2/4 md:rounded-none md:rounded-s-lg"
             src={ferramenta?.foto}
             alt="Foto da Ferramenta"
-          /> {/* Alterado para ferramenta */}
+          /> 
+          </div>
           <div className="flex flex-col justify-between p-4 leading-normal">
 
             <div>
@@ -281,7 +339,12 @@ export default function Detalhes() {
             <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
               {ferramenta?.acessorios}
             </p>
-            <button type="submit" className="w-full text-white bg-orange-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+            <button type="submit" className="w-full text-white bg-orange-600
+             hover:bg-primary-700 
+             focus:ring-4 focus:outline-none focus:ring-primary-300 
+             font-medium rounded-lg 
+             text-sm px-5 py-2.5 text-center dark:bg-primary-600 
+             dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                 Comprar</button>
           </div>
           <div>
