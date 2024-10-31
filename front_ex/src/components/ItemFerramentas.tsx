@@ -23,7 +23,7 @@ export function ItemFerramentas({ ferramenta }: { ferramenta: Ferramenta }) {
         <p className="mb-3 font-normal text-gray-700 ">
           Ano: {ferramenta.ano} - {ferramenta.quantidadeEmEstoque} Estoque
         </p>
-        <p className="mb-3 font-bold text-white">
+        <p className="mb-3 font-bold ">
           R$ {Number(ferramenta.preco).toLocaleString("pt-br",
             { minimumFractionDigits: 2 }
           )}

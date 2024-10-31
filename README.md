@@ -34,3 +34,6 @@ NEXT_PUBLIC_URL_API="http://localhost:3004"
 
 # Iniciar o Docker compose {não esta funcioando a Migração de tabelas em api}
 docker-compose up --build
+
+-# remove a build 
+docker-compose down

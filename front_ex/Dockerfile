@@ -1,5 +1,5 @@
 # Use a imagem base do Node.js
-FROM node:20
+FROM node:18
 
 # Crie um diretório de trabalho
 WORKDIR /app
@@ -10,6 +10,9 @@ COPY package*.json ./
 # Instale as dependências
 RUN npm install
 
+# Crie o arquivo .env.local com a URL da API
+RUN echo 'NEXT_PUBLIC_URL_API="http://localhost:3004"' > .env.local
+
 # Copie o restante dos arquivos da aplicação
 COPY . .
 
@@ -17,4 +20,6 @@ COPY . .
 EXPOSE 3000
 
 # Comando para iniciar a aplicação
-CMD ["npm", "run", "dev"]  # Use "npm start" se não for um projeto Next.js
+CMD npm run dev
+
+
